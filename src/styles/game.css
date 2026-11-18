@@ -394,3 +394,12 @@
 }
 .settings-actions { display: grid; gap: 8px; margin-top: 16px; }
 .settings-actions input { width: 100%; min-width: 0; font: inherit; }
+.chapter-list { display: grid; gap: 8px; padding: 0; list-style: none; }
+.chapter-list button { width: 100%; text-align: start; overflow-wrap: anywhere; }
+.chapter-goal { margin: 4px 0 0; }
+.room-footer { align-items: center; }
+.room-footer button { flex: none; }
+.dialogue-panel__choices { display: grid; gap: 8px; margin-top: 12px; }
+.dialogue-panel__choices:empty { display: none; }
+.dialogue-panel__choices button { text-align: start; overflow-wrap: anywhere; }
+.dialogue-panel { max-height: calc(100% - 30px); overflow: auto; overflow-wrap: anywhere; }

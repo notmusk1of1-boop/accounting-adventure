@@ -5,7 +5,7 @@
     "title": "总论",
     "subtitle": "会计档案室 · 初次值班",
     "statusTitle": "档案室现在可以调查",
-    "statusText": "点击闪光标记或老会计，查看对应说明。",
+    "statusText": "调查全部地点，再和周会计核对线索。",
     "footerLeft": "已进入会计档案室",
     "footerRight": "第一章 · 总论"
   },
@@ -42,7 +42,20 @@
     "mentor-intro": [
       { "speaker": "周会计", "text": "新来的？别紧张。这里的每一排档案，都对应一段会计工作的来龙去脉。" },
       { "speaker": "你", "text": "我应该先做什么？" },
-      { "speaker": "周会计", "text": "先四处看看。会发光的地方都能调查，今天只需要熟悉档案室。" }
+      {
+        "speaker": "周会计",
+        "text": "我们来核对你看到的线索。你想先聊哪一个？",
+        "choices": [
+          { "label": "旧账簿该怎么查？", "next": "mentor-books" },
+          { "label": "台账能帮我做什么？", "next": "mentor-ledger" }
+        ]
+      }
+    ],
+    "mentor-books": [
+      { "speaker": "周会计", "text": "从业务日期和编号开始查，再对照凭证。", "event": "review" }
+    ],
+    "mentor-ledger": [
+      { "speaker": "周会计", "text": "台账里有存放位置和借阅状态，先确认资料是否在室。", "event": "review" }
     ],
     "shelf-note": [
       { "speaker": "旁白", "text": "书架上整齐放着旧账簿，标签按年份和业务类型分类。" },

@@ -43,6 +43,7 @@ export function homeScreen(progress) {
         <button class="text-button" type="button" data-navigate="handbook">
           先翻翻随身手册
         </button>
+        <button class="text-button" type="button" data-navigate="chapters">查看章节</button>
         <button class="text-button" type="button" data-navigate="settings">设置与存档</button>
       </section>
     </main>

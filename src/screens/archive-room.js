@@ -45,9 +45,9 @@ export function archiveRoomScreen(progress, content) {
   const { scene, characters, hotspots } = content
 
   return `
-    <main class="game-shell room-screen" aria-labelledby="room-title">
+    <main class="game-shell room-screen" aria-labelledby="room-title" data-chapter-id="${scene.id}">
       <header class="room-header">
-        <button class="header-button" type="button" data-navigate="home">← 大厅</button>
+        <button class="header-button" type="button" data-navigate="chapters">← 章节</button>
         <div class="room-heading">
           <h1 id="room-title">${scene.title}</h1>
           <p>${scene.subtitle}</p>
@@ -92,13 +92,17 @@ export function archiveRoomScreen(progress, content) {
           <button class="dialogue-panel__close" type="button" data-dialogue-close aria-label="关闭对话">×</button>
           <strong class="dialogue-panel__speaker" data-dialogue-speaker></strong>
           <p class="dialogue-panel__text" data-dialogue-text></p>
+          <div class="dialogue-panel__choices" data-dialogue-choices></div>
           <button class="dialogue-panel__next" type="button" data-dialogue-next>继续</button>
         </section>
       </section>
 
       <footer class="room-footer">
-        <span>${scene.footerLeft}</span>
-        <span>${scene.footerRight}</span>
+        <div>
+          <div>${scene.footerRight}</div>
+          <p class="chapter-goal" data-chapter-goal></p>
+        </div>
+        <button class="header-button" type="button" data-chapter-advance>完成本章</button>
       </footer>
     </main>
   `

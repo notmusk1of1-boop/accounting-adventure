@@ -1,11 +1,14 @@
-export const SAVE_KEY = 'accounting-adventure:save:v1'
-const LEGACY_KEY = 'accounting-adventure:learning:v1'
-const SCHEMA_VERSION = 1
+import { chapterReady } from './chapters.js'
 
-function newSave() {
+export const SAVE_KEY = 'accounting-adventure:save:v2'
+const OLD_SAVE_KEY = 'accounting-adventure:save:v1'
+const LEGACY_KEY = 'accounting-adventure:learning:v1'
+const SCHEMA_VERSION = 2
+
+function newSave(firstId) {
   return {
     schemaVersion: SCHEMA_VERSION,
-    progress: { started: false, visited: [] },
+    progress: { started: false, currentId: firstId, completed: [], chapters: {} },
     settings: { theme: 'light' },
     learning: { wrong: {}, favorites: {}, notes: {}, history: [] },
   }
@@ -37,41 +40,66 @@ function validLearning(learning) {
       validEntry(entry) && isText(entry.time) && Number.isFinite(Date.parse(entry.time)))
 }
 
-export function parseSave(text, hotspotIds) {
+function validVisits(visited) {
+  return Array.isArray(visited) && visited.every(validId) && new Set(visited).size === visited.length
+}
+
+export function parseSave(text, chapters) {
   let data
   try { data = JSON.parse(text) } catch { throw new Error('文件不是有效的 JSON。') }
-  if (data?.schemaVersion !== SCHEMA_VERSION) throw new Error('这个存档版本不受支持。')
-  if (!isObject(data.progress) || typeof data.progress.started !== 'boolean'
-    || !Array.isArray(data.progress.visited) || !data.progress.visited.every(validId)
-    || new Set(data.progress.visited).size !== data.progress.visited.length
-    || (!data.progress.started && data.progress.visited.length > 0)
-    || !['light', 'dark'].includes(data.settings?.theme)
-    || !validLearning(data.learning)) {
-    throw new Error('存档里的进度、设置或学习记录不完整。')
+  if (![1, SCHEMA_VERSION].includes(data?.schemaVersion)) throw new Error('这个存档版本不受支持。')
+  const invalid = () => { throw new Error('存档里的进度、设置或学习记录不完整。') }
+  const firstId = chapters[0].scene.id
+  let progress = data.progress
+  if (!isObject(progress) || typeof progress.started !== 'boolean'
+    || !['light', 'dark'].includes(data.settings?.theme) || !validLearning(data.learning)) invalid()
+
+  if (data.schemaVersion === 1) {
+    if (!validVisits(progress.visited) || (!progress.started && progress.visited.length)) invalid()
+    progress = {
+      ...newSave(firstId).progress,
+      started: progress.started,
+      chapters: progress.started ? { [firstId]: { visited: progress.visited, reviewed: false } } : {},
+    }
   }
+  const ids = chapters.map(chapter => chapter.scene.id)
+  const { started, currentId, completed, chapters: savedChapters } = progress
+  if (!Array.isArray(completed) || !completed.every((id, index) => id === ids[index])
+    || completed.length > ids.length || !isObject(savedChapters)) invalid()
+  const unlocked = ids.slice(0, completed.length + 1)
+  if (!unlocked.includes(currentId) || (!started && (completed.length || Object.keys(savedChapters).length || currentId !== firstId))) invalid()
+  const chapterProgress = {}
+  for (const [id, value] of Object.entries(savedChapters)) {
+    if (!unlocked.includes(id) || !isObject(value) || !validVisits(value.visited) || typeof value.reviewed !== 'boolean') invalid()
+    const hotspots = chapters[ids.indexOf(id)].hotspots
+    chapterProgress[id] = { visited: value.visited.filter(spotId => hotspots.some(spot => spot.id === spotId)), reviewed: value.reviewed }
+  }
+  if (completed.some(id => !chapterProgress[id]?.reviewed)) invalid()
   return {
     schemaVersion: SCHEMA_VERSION,
-    progress: {
-      started: data.progress.started,
-      visited: data.progress.visited.filter(id => hotspotIds.includes(id)),
-    },
+    progress: { started, currentId, completed, chapters: chapterProgress },
     settings: { theme: data.settings.theme },
     learning: data.learning,
   }
 }
 
-export function createSave(hotspotIds, getStorage = () => window.localStorage) {
-  let state = newSave()
+export function createSave(chapters, getStorage = () => window.localStorage) {
+  const ids = chapters.map(chapter => chapter.scene.id)
+  let state = newSave(ids[0])
   let storageError = false
   let protectStoredData = false
   try {
     const storage = getStorage()
     const saved = storage.getItem(SAVE_KEY)
     if (saved !== null) {
-      state = parseSave(saved, hotspotIds)
+      state = parseSave(saved, chapters)
     } else {
-      const legacy = storage.getItem(LEGACY_KEY)
-      if (legacy !== null) {
+      const earlierSave = storage.getItem(OLD_SAVE_KEY)
+      const legacy = earlierSave === null ? storage.getItem(LEGACY_KEY) : null
+      if (earlierSave !== null) {
+        state = parseSave(earlierSave, chapters)
+        storage.setItem(SAVE_KEY, JSON.stringify(state))
+      } else if (legacy !== null) {
         const learning = JSON.parse(legacy)
         if (!validLearning(learning)) throw new Error('旧学习记录格式不完整。')
         state.learning = learning
@@ -104,27 +132,62 @@ export function createSave(hotspotIds, getStorage = () => window.localStorage) {
     protectStoredData = false
   }
 
+  function canEnter(id) {
+    const index = ids.indexOf(id)
+    return index >= 0 && index <= state.progress.completed.length
+  }
+
+  function getChapterProgress(id) {
+    return state.progress.chapters[id] ?? { visited: [], reviewed: false }
+  }
+
+  function updateChapter(id, update) {
+    state.progress.chapters[id] = { ...getChapterProgress(id), ...update }
+    persist()
+  }
+
   return {
     get state() { return state },
     get storageError() { return storageError },
     persist,
-    enterRoom() {
-      if (state.progress.started) return
-      state.progress.started = true
-      persist()
+    canEnter,
+    getChapterProgress,
+    get resumeId() {
+      const { currentId, completed } = state.progress
+      return completed.includes(currentId) ? ids[completed.length] ?? currentId : currentId
     },
-    visit(id) {
-      if (!hotspotIds.includes(id) || state.progress.visited.includes(id)) return
+    enterRoom(id) {
+      if (!canEnter(id)) return false
+      if (state.progress.started && state.progress.currentId === id) return true
       state.progress.started = true
-      state.progress.visited.push(id)
+      state.progress.currentId = id
       persist()
+      return true
+    },
+    visit(id, spotId) {
+      const chapter = chapters[ids.indexOf(id)]
+      if (state.progress.currentId !== id || !state.progress.started
+        || !canEnter(id) || !chapter.hotspots.some(spot => spot.id === spotId)) return
+      const { visited } = getChapterProgress(id)
+      if (!visited.includes(spotId)) updateChapter(id, { visited: [...visited, spotId] })
+    },
+    review(id) {
+      if (state.progress.started && state.progress.currentId === id
+        && canEnter(id) && !getChapterProgress(id).reviewed) updateChapter(id, { reviewed: true })
+    },
+    finish(id) {
+      const completed = state.progress.completed
+      if (!canEnter(id) || ids[completed.length] !== id || !chapterReady(chapters[completed.length], getChapterProgress(id))) return false
+      completed.push(id)
+      persist()
+      return true
     },
     setTheme(theme) {
       state.settings.theme = theme
       persist()
     },
     exportText() { return JSON.stringify(state, null, 2) },
-    importText(text) { replace(parseSave(text, hotspotIds)) },
-    reset() { replace(newSave()) },
+    importText(text) { replace(parseSave(text, chapters)) },
+    reset() { replace(newSave(ids[0])) },
   }
 }
