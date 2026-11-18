@@ -369,3 +369,19 @@
 .trial-feedback { padding: 12px 16px; border: 1px solid var(--green-dark); }
 .trial-feedback h3 { margin: 0; }
 .trial-feedback p:last-child { margin-bottom: 0; }
+.record-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.record-actions button[aria-pressed="false"] { background: var(--paper); color: var(--green-dark); }
+.record-item { margin-bottom: 12px; }
+.note-editor { margin: 12px 0; }
+.note-editor textarea {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 8px;
+  border: 1px solid var(--green-dark);
+  background: var(--paper);
+  color: var(--ink);
+  font: inherit;
+  resize: vertical;
+}
+.trial-card > .trial-form + .trial-button { margin-top: 14px; }

@@ -41,10 +41,9 @@ export function homeScreen() {
         <button class="primary-button" type="button" data-navigate="room">
           开始新的旅程
         </button>
-        <button class="text-button" type="button" disabled title="手册将在后续计划中开放">
+        <button class="text-button" type="button" data-navigate="handbook">
           先翻翻随身手册
         </button>
-        <p class="save-note">进度功能将在第 5 天加入 · 当前为第 1 天场景骨架</p>
       </section>
     </main>
   `

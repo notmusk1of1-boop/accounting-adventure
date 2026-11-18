@@ -1,4 +1,5 @@
 import { isCorrect, selectQuestions } from '../trial.js'
+import { action, element, noteEditor, storageStatus } from './controls.js'
 
 export function trialScreen() {
   return `
@@ -6,30 +7,19 @@ export function trialScreen() {
       <header class="room-header">
         <button class="header-button" type="button" data-navigate="room">← 档案室</button>
         <div class="room-heading"><h1 id="trial-title">会计试炼</h1></div>
+        <button class="header-button" type="button" data-navigate="handbook">手册</button>
       </header>
       <section class="trial-card" data-trial-content></section>
     </main>
   `
 }
 
-function element(tag, label, attributes = {}) {
-  const node = document.createElement(tag)
-  for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, value)
-  node.textContent = label
-  return node
-}
-
-function action(label, handler) {
-  const button = element('button', label, { type: 'button', class: 'trial-button' })
-  button.addEventListener('click', handler)
-  return button
-}
-
-export function setupTrial(root, bank) {
+export function setupTrial(root, bank, records) {
   const card = root.querySelector('[data-trial-content]')
   let questions = []
   let index = 0
   let score = 0
+  let mode
 
   function showModes(focus = false) {
     const title = element('h2', '选择练习方式', { tabindex: '-1' })
@@ -51,6 +41,7 @@ export function setupTrial(root, bank) {
     questions = selectQuestions(bank.questions, chapterId)
     index = 0
     score = 0
+    mode = chapterId === 'mixed' ? '随机混题' : '按章练习'
     showQuestion()
   }
 
@@ -83,11 +74,22 @@ export function setupTrial(root, bank) {
       fieldset.disabled = true
       const correct = isCorrect(question, selected)
       score += Number(correct)
+      const entry = {
+        questionId: question.id,
+        prompt: question.prompt,
+        chapter: bank.chapters.find(chapter => chapter.id === question.chapterId)?.title ?? question.chapterId,
+        mode,
+        selected: selected.map(answer => question.options[answer]),
+        answers: question.correct.map(answer => question.options[answer]),
+        explanation: question.explanation,
+        correct,
+      }
+      records.recordAnswer(entry)
       submit.remove()
       const feedback = element('div', '', { class: 'trial-feedback', tabindex: '-1' })
       feedback.append(
         element('h3', correct ? '回答正确' : '回答错误'),
-        element('p', `正确答案：${question.correct.map(answer => question.options[answer]).join('、')}`),
+        element('p', `正确答案：${entry.answers.join('、')}`),
         element('p', `解析：${question.explanation}`),
       )
       const lastQuestion = index === questions.length - 1
@@ -96,6 +98,22 @@ export function setupTrial(root, bank) {
         if (lastQuestion) showResult()
         else showQuestion()
       }))
+      const status = element('p', storageStatus(records) || (correct ? '' : '已加入错题本'), { role: 'status' })
+      const favorite = action('收藏本题', () => {
+        records.toggleFavorite(entry)
+        updateFavorite()
+        status.textContent = storageStatus(records) || (isFavorite() ? '已收藏' : '已取消收藏')
+      })
+      const isFavorite = () => Object.hasOwn(records.state.favorites, entry.questionId)
+      function updateFavorite() {
+        favorite.textContent = isFavorite() ? '取消收藏' : '收藏本题'
+      }
+      updateFavorite()
+      const note = noteEditor(records, entry, message => {
+        status.textContent = storageStatus(records) || message
+      })
+      // The note has its own submit handler and must sit outside the answer form.
+      card.append(favorite, note, status)
       feedback.focus()
     })
     card.replaceChildren(title, form)

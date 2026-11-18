@@ -2,6 +2,8 @@ import { homeScreen } from './screens/home.js'
 import { archiveRoomScreen } from './screens/archive-room.js'
 import { setupDialogue } from './dialogue.js'
 import { setupTrial, trialScreen } from './screens/trial.js'
+import { handbookScreen, setupHandbook } from './screens/handbook.js'
+import { createLearningRecords } from './learning.js'
 import gameContent from './data/game-content.json'
 import trialQuestions from './data/trial-questions.json'
 
@@ -9,6 +11,7 @@ const screens = {
   home: homeScreen,
   room: () => archiveRoomScreen(gameContent),
   trial: trialScreen,
+  handbook: handbookScreen,
 }
 
 function currentScreen() {
@@ -21,6 +24,7 @@ function navigate(screen) {
 }
 
 export function renderApp(root) {
+  const records = createLearningRecords()
   function render() {
     const screen = currentScreen()
     root.innerHTML = screens[screen]()
@@ -31,7 +35,8 @@ export function renderApp(root) {
     })
 
     if (screen === 'room') setupDialogue(root, gameContent.dialogues)
-    if (screen === 'trial') setupTrial(root, trialQuestions)
+    if (screen === 'trial') setupTrial(root, trialQuestions, records)
+    if (screen === 'handbook') setupHandbook(root, records)
   }
 
   window.addEventListener('hashchange', render)
