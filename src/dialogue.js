@@ -7,7 +7,7 @@ function showLine(panel, line, index, total) {
   nextButton.setAttribute('aria-label', `${nextButton.textContent}，第 ${index + 1} 句，共 ${total} 句`)
 }
 
-export function setupDialogue(root, dialogues) {
+export function setupDialogue(root, dialogues, onOpen) {
   const panel = root.querySelector('[data-dialogue-panel]')
   if (!panel) return
 
@@ -31,6 +31,7 @@ export function setupDialogue(root, dialogues) {
     trigger = source
     panel.hidden = false
     showLine(panel, activeLines[activeIndex], activeIndex, activeLines.length)
+    onOpen?.(source)
     panel.querySelector('[data-dialogue-next]').focus()
   }
 
@@ -50,7 +51,7 @@ export function setupDialogue(root, dialogues) {
 
   panel.querySelector('[data-dialogue-close]').addEventListener('click', closeDialogue)
 
-  root.addEventListener('keydown', (event) => {
+  panel.closest('main').addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && !panel.hidden) closeDialogue()
   })
 }

@@ -24,22 +24,24 @@ function characterMarkup(character) {
   `
 }
 
-function hotspotMarkup(hotspot) {
+function hotspotMarkup(hotspot, visited) {
   return `
     <button
       class="scene-hotspot"
       type="button"
       style="${positionStyle(hotspot.position)}"
       data-dialogue-id="${hotspot.dialogueId}"
+      data-hotspot-id="${hotspot.id}"
+      data-visited="${visited}"
       aria-label="调查${hotspot.label}"
     >
-      <span class="scene-hotspot__marker" aria-hidden="true">＋</span>
+      <span class="scene-hotspot__marker" aria-hidden="true">${visited ? '✓' : '＋'}</span>
       <span class="scene-hotspot__label">${hotspot.label}</span>
     </button>
   `
 }
 
-export function archiveRoomScreen(content) {
+export function archiveRoomScreen(progress, content) {
   const { scene, characters, hotspots } = content
 
   return `
@@ -50,10 +52,10 @@ export function archiveRoomScreen(content) {
           <h1 id="room-title">${scene.title}</h1>
           <p>${scene.subtitle}</p>
         </div>
-        <div class="room-actions" aria-label="后续功能入口">
+        <div class="room-actions" aria-label="档案室功能">
           <button class="header-button" type="button" data-navigate="trial">试炼</button>
           <button class="header-button" type="button" data-navigate="handbook">手册</button>
-          <button class="header-button" type="button" disabled>设置</button>
+          <button class="header-button" type="button" data-navigate="settings">设置</button>
         </div>
       </header>
 
@@ -74,14 +76,15 @@ export function archiveRoomScreen(content) {
 
         <div class="scene-interactions" aria-label="场景互动区域">
           ${characters.map(characterMarkup).join('')}
-          ${hotspots.map(hotspotMarkup).join('')}
+          ${hotspots.map(hotspot => hotspotMarkup(hotspot, progress.visited.includes(hotspot.id))).join('')}
         </div>
 
         <div class="scene-status" role="status">
-          <span class="scene-status__badge">第 2 天</span>
           <div>
             <strong>${scene.statusTitle}</strong>
             <p>${scene.statusText}</p>
+            <p>已调查 <span data-visited-count>${progress.visited.length}</span> / ${hotspots.length} 处</p>
+            <p data-room-save-status hidden>浏览器未能保存调查进度。</p>
           </div>
         </div>
 

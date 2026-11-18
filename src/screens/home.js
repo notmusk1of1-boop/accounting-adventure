@@ -10,7 +10,7 @@ function pixelCharacter(className, label) {
   `
 }
 
-export function homeScreen() {
+export function homeScreen(progress) {
   return `
     <main class="game-shell home-screen" aria-labelledby="game-title">
       <div class="room-illustration room-illustration--home" aria-hidden="true">
@@ -34,16 +34,16 @@ export function homeScreen() {
         </div>
 
         <p class="home-card__intro">
-          你是一名出纳。推开档案室的门，跟着老会计，走过二十五间屋子。
-          一间一章，只管逛，不用赶路。
+          你是一名出纳。推开档案室的门，调查资料，和老会计聊一聊。
         </p>
 
         <button class="primary-button" type="button" data-navigate="room">
-          开始新的旅程
+          ${progress.started ? '继续旅程' : '开始新的旅程'}
         </button>
         <button class="text-button" type="button" data-navigate="handbook">
           先翻翻随身手册
         </button>
+        <button class="text-button" type="button" data-navigate="settings">设置与存档</button>
       </section>
     </main>
   `

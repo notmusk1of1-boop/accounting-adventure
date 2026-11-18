@@ -1,0 +1,22 @@
+{
+  "assets": {
+    "favicon": "favicon.svg",
+    "roomBackground": null
+  },
+  "light": {
+    "paper": "#f6f1e5", "paper-deep": "#e9e0ce", "surface": "#fffaf0",
+    "ink": "#263c37", "muted": "#625e53", "green": "#42715f", "green-dark": "#315c50",
+    "accent": "#315c50", "line": "#a19480", "focus": "#1d5c82",
+    "brown": "#735b3e", "brown-dark": "#4d3c2a", "blue-glass": "#b9d4d6",
+    "canvas": "#d8d3c6", "wall": "#efe8d8", "floor": "#aa8e68", "wood": "#8e6f4d",
+    "wood-edge": "#6e563b", "shelf": "#9d896d", "books": "#b7aa92", "plant": "#a6b19b"
+  },
+  "dark": {
+    "paper": "#242d2a", "paper-deep": "#303d37", "surface": "#35463f",
+    "ink": "#f2eee2", "muted": "#cbcbbd", "green": "#416c5a", "green-dark": "#34594b",
+    "accent": "#b7e2cb", "line": "#8a9b8f", "focus": "#9cdaff",
+    "brown": "#816644", "brown-dark": "#513b2c", "blue-glass": "#537680",
+    "canvas": "#161e1c", "wall": "#354039", "floor": "#534737", "wood": "#65513c",
+    "wood-edge": "#453727", "shelf": "#655740", "books": "#a28c69", "plant": "#617e65"
+  }
+}

@@ -1,19 +1,9 @@
 :root {
   font-family: "Microsoft YaHei", "PingFang SC", "Noto Sans CJK SC", system-ui, sans-serif;
-  color: #263c37;
-  background: #d8d3c6;
+  color: var(--ink, #263c37);
+  background: var(--canvas, #d8d3c6);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-  --paper: #f6f1e5;
-  --paper-deep: #e9e0ce;
-  --ink: #263c37;
-  --muted: #7e877f;
-  --green: #4e7e6c;
-  --green-dark: #315c50;
-  --brown: #735b3e;
-  --brown-dark: #4d3c2a;
-  --line: #b9b19f;
-  --blue-glass: #b9d4d6;
   --shadow: rgba(43, 41, 35, 0.18);
 }
 
@@ -22,7 +12,7 @@
 html {
   min-width: 320px;
   min-height: 100%;
-  background: #d8d3c6;
+  background: var(--canvas);
 }
 
 body {
@@ -32,13 +22,16 @@ body {
   margin: 0;
   overflow-x: hidden;
   background:
-    radial-gradient(circle at 18% 14%, rgba(255, 255, 255, 0.52), transparent 28rem),
-    linear-gradient(135deg, #d2ccbf, #e8e4da 46%, #c9c2b4);
+    radial-gradient(circle at 18% 14%, var(--paper-deep), transparent 28rem),
+    var(--canvas);
 }
 
 button { font: inherit; }
 button:not(:disabled) { cursor: pointer; }
-button:focus-visible { outline: 3px solid #1d5c82; outline-offset: 3px; }
+button:focus-visible, input:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 3px;
+}
 
 #app {
   min-height: 100vh;

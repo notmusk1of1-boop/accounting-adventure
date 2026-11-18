@@ -1,58 +1,30 @@
-const storageKey = 'accounting-adventure:learning:v1'
-
-export function createLearningRecords(getStorage = () => window.localStorage) {
-  let state = { wrong: {}, favorites: {}, notes: {}, history: [] }
-  let storageError = false
-  try {
-    const saved = getStorage().getItem(storageKey)
-    if (saved) {
-      const data = JSON.parse(saved)
-      for (const group of ['wrong', 'favorites', 'notes']) {
-        if (data?.[group] && typeof data[group] === 'object' && !Array.isArray(data[group])) {
-          state[group] = data[group]
-        }
-      }
-      if (Array.isArray(data?.history)) state.history = data.history
-    }
-  } catch {
-    storageError = true
-  }
-
-  function save() {
-    try {
-      getStorage().setItem(storageKey, JSON.stringify(state))
-      storageError = false
-    } catch {
-      storageError = true
-    }
-  }
-
+export function createLearningRecords(save) {
   return {
-    get state() { return state },
-    get storageError() { return storageError },
+    get state() { return save.state.learning },
+    get storageError() { return save.storageError },
     recordAnswer(entry) {
-      state.history.unshift({ ...entry, time: new Date().toISOString() })
-      if (!entry.correct) state.wrong[entry.questionId] = entry
-      save()
+      this.state.history.unshift({ ...entry, time: new Date().toISOString() })
+      if (!entry.correct) this.state.wrong[entry.questionId] = entry
+      save.persist()
     },
     removeWrong(id) {
-      delete state.wrong[id]
-      save()
+      delete this.state.wrong[id]
+      save.persist()
     },
     toggleFavorite(entry) {
       const id = entry.questionId
-      if (Object.hasOwn(state.favorites, id)) delete state.favorites[id]
-      else state.favorites[id] = entry
-      save()
+      if (Object.hasOwn(this.state.favorites, id)) delete this.state.favorites[id]
+      else this.state.favorites[id] = entry
+      save.persist()
     },
     saveNote(entry, text) {
       if (!text.trim()) return
-      state.notes[entry.questionId] = { ...entry, text: text.trim() }
-      save()
+      this.state.notes[entry.questionId] = { ...entry, text: text.trim() }
+      save.persist()
     },
     deleteNote(id) {
-      delete state.notes[id]
-      save()
+      delete this.state.notes[id]
+      save.persist()
     },
   }
 }
