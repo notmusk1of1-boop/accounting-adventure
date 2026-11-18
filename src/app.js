@@ -1,9 +1,11 @@
 import { homeScreen } from './screens/home.js'
 import { archiveRoomScreen } from './screens/archive-room.js'
+import { setupDialogue } from './dialogue.js'
+import gameContent from './data/game-content.json'
 
 const screens = {
   home: homeScreen,
-  room: archiveRoomScreen,
+  room: () => archiveRoomScreen(gameContent),
 }
 
 function currentScreen() {
@@ -24,6 +26,8 @@ export function renderApp(root) {
     root.querySelectorAll('[data-navigate]').forEach((button) => {
       button.addEventListener('click', () => navigate(button.dataset.navigate))
     })
+
+    if (screen === 'room') setupDialogue(root, gameContent.dialogues)
   }
 
   window.addEventListener('hashchange', render)
