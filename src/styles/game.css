@@ -347,3 +347,25 @@
   .room-header { min-height: 68px; }
   .archive-room { min-height: 600px; }
 }
+.trial-screen { align-self: start; }
+.trial-card { padding: clamp(16px, 5vw, 44px); }
+.trial-card h2 { margin: 0 0 20px; }
+.trial-actions, .trial-form { display: grid; gap: 14px; }
+.trial-form fieldset { min-inline-size: 0; margin: 0; padding: 12px; border: 1px solid var(--line); }
+.trial-form legend { max-width: 100%; font-weight: 700; overflow-wrap: anywhere; }
+.trial-form fieldset p { margin: 0 0 12px; color: #5e584d; }
+.trial-option { display: flex; align-items: center; gap: 10px; min-height: 44px; padding: 6px 10px; cursor: pointer; }
+.trial-option input { flex: none; accent-color: var(--green-dark); }
+.trial-option span, .trial-feedback { overflow-wrap: anywhere; }
+.trial-option:has(input:checked) { background: var(--paper-deep); }
+.trial-button {
+  min-height: 44px;
+  padding: 8px 16px;
+  border: 2px solid var(--green-dark);
+  background: var(--green-dark);
+  color: white;
+}
+.trial-button:disabled { opacity: .55; }
+.trial-feedback { padding: 12px 16px; border: 1px solid var(--green-dark); }
+.trial-feedback h3 { margin: 0; }
+.trial-feedback p:last-child { margin-bottom: 0; }

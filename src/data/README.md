@@ -8,3 +8,5 @@
 - `dialogues`：对话正文；每一项包含说话者 `speaker` 和文字 `text`。
 
 位置使用百分比，适合不同屏幕尺寸。例如 `"left": "7%"` 表示距离场景左侧 7%。编辑时请保留英文双引号、逗号和大括号。
+
+`trial-questions.json` 是试炼题库。题目的 `chapterId` 对应章节的 `id`，`type` 使用 `single`（单选）或 `multiple`（多选）。`correct` 从 0 开始编号，例如 `[0, 2]` 表示第一个和第三个选项正确。`explanation` 是提交后显示的解析。发布前请重新构建。

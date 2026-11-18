@@ -51,6 +51,7 @@ export function archiveRoomScreen(content) {
           <p>${scene.subtitle}</p>
         </div>
         <div class="room-actions" aria-label="后续功能入口">
+          <button class="header-button" type="button" data-navigate="trial">试炼</button>
           <button class="header-button" type="button" disabled>手册</button>
           <button class="header-button" type="button" disabled>设置</button>
         </div>

@@ -1,0 +1,36 @@
+{
+  "chapters": [
+    { "id": "basics", "title": "第 1 章 · 会计基础（示例）" },
+    { "id": "inventory", "title": "第 2 章 · 存货（示例）" }
+  ],
+  "questions": [
+    {
+      "id": "b1", "chapterId": "basics", "type": "single",
+      "prompt": "核对一笔收款时，哪项资料能直接证明款项已入账？",
+      "options": ["银行入账回单", "客户的口头承诺", "尚未提交的付款申请"],
+      "correct": [0],
+      "explanation": "银行入账回单记录已经发生的收款。承诺和申请不能证明实际到账。"
+    },
+    {
+      "id": "b2", "chapterId": "basics", "type": "multiple",
+      "prompt": "哪些做法有助于日后核对一笔业务？",
+      "options": ["保存原始凭证", "记录业务日期和金额", "把凭证交给别人后不记录去向"],
+      "correct": [0, 1],
+      "explanation": "原始凭证、日期和金额有助于追溯业务。资料交接也应记录去向。"
+    },
+    {
+      "id": "i1", "chapterId": "inventory", "type": "single",
+      "prompt": "某商品入库 20 件、出库 6 件，期初为 0 件，账面剩余多少件？",
+      "options": ["6 件", "14 件", "26 件"],
+      "correct": [1],
+      "explanation": "账面剩余数量等于期初数量加本期入库数量，再减去本期出库数量，即 14 件。"
+    },
+    {
+      "id": "i2", "chapterId": "inventory", "type": "multiple",
+      "prompt": "发现实盘数量与账面不一致后，哪些是合理的核查动作？",
+      "options": ["复点实物数量", "核对近期出入库记录", "直接把账面改成盘点数并丢弃记录"],
+      "correct": [0, 1],
+      "explanation": "复点与核对单据可以帮助定位差异原因。应保留差异记录并按流程处理。"
+    }
+  ]
+}
