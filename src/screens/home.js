@@ -1,4 +1,4 @@
-function pixelCharacter(className, label) {
+export function pixelCharacter(className, label) {
   return `
     <div class="pixel-character ${className}" role="img" aria-label="${label}">
       <span class="pixel-character__hair"></span>

@@ -1,3 +1,5 @@
+import { pixelCharacter } from './home.js'
+
 function positionStyle(position) {
   return Object.entries(position)
     .map(([property, value]) => `--${property}: ${value}`)
@@ -59,7 +61,7 @@ export function archiveRoomScreen(progress, content) {
         </div>
       </header>
 
-      <section class="archive-room" aria-label="可互动的档案室场景">
+      <section class="archive-room" tabindex="0" aria-label="档案室，点击地面或使用方向键移动">
         <div class="archive-room__wall">
           <div class="wall-sign wall-sign--room">会计档案室</div>
           <div class="window window--room"><span></span><span></span></div>
@@ -78,24 +80,26 @@ export function archiveRoomScreen(progress, content) {
           ${characters.map(characterMarkup).join('')}
           ${hotspots.map(hotspot => hotspotMarkup(hotspot, progress.visited.includes(hotspot.id))).join('')}
         </div>
-
-        <div class="scene-status" role="status">
-          <div>
-            <strong>${scene.statusTitle}</strong>
-            <p>${scene.statusText}</p>
-            <p>已调查 <span data-visited-count>${progress.visited.length}</span> / ${hotspots.length} 处</p>
-            <p data-room-save-status hidden>浏览器未能保存调查进度。</p>
-          </div>
+        <div class="room-player" data-room-player>
+          ${pixelCharacter('pixel-character--student', '玩家')}
         </div>
 
         <section class="dialogue-panel" data-dialogue-panel role="dialog" aria-label="场景对话" hidden>
           <button class="dialogue-panel__close" type="button" data-dialogue-close aria-label="关闭对话">×</button>
           <strong class="dialogue-panel__speaker" data-dialogue-speaker></strong>
           <p class="dialogue-panel__text" data-dialogue-text></p>
+          <p class="dialogue-card-reward" data-dialogue-reward hidden></p>
           <div class="dialogue-panel__choices" data-dialogue-choices></div>
           <button class="dialogue-panel__next" type="button" data-dialogue-next>继续</button>
         </section>
       </section>
+
+      <div class="scene-status" role="status">
+        <strong>${scene.statusTitle}</strong>
+        <p>${scene.statusText}</p>
+        <p>已调查 <span data-visited-count>${progress.visited.length}</span> / ${hotspots.length} 处 <span data-card-count></span></p>
+        <p data-room-save-status hidden>浏览器未能保存调查进度。</p>
+      </div>
 
       <footer class="room-footer">
         <div>

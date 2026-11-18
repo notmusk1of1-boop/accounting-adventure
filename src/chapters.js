@@ -11,7 +11,10 @@ export function createChapters(first, index) {
       id: entry.id,
     },
     characters: entry.characters ?? first.characters,
-    hotspots: entry.hotspots ?? [{ ...first.hotspots[0], label: '待核对的资料', dialogueId: 'clue' }],
+    hotspots: entry.hotspots ?? [{
+      id: first.hotspots[0].id, position: first.hotspots[0].position,
+      label: '待核对的资料', dialogueId: 'clue',
+    }],
     dialogues: {
       clue: [{ speaker: '旁白', text: entry.clue }],
       'mentor-intro': [{
@@ -39,6 +42,11 @@ export function createChapters(first, index) {
     for (const actor of [...characters, ...hotspots]) {
       if (!hasDialogue(actor.dialogueId)) throw new Error(`缺少对白：${scene.id} / ${actor.dialogueId}`)
     }
+    for (const { card, id } of hotspots) {
+      if (card !== undefined && ![card?.title, card?.text].every(value => typeof value === 'string' && value.trim())) {
+        throw new Error(`知识卡缺少标题或正文：${scene.id} / ${id}`)
+      }
+    }
     for (const lines of Object.values(dialogues)) {
       for (const line of lines) {
         if (line.choices?.some(choice => !hasDialogue(choice.next))) {
@@ -52,4 +60,15 @@ export function createChapters(first, index) {
 
 export function chapterReady(chapter, progress) {
   return progress.reviewed && chapter.hotspots.every(spot => progress.visited.includes(spot.id))
+}
+
+export function knowledgeCards(chapters, progressFor) {
+  return chapters.flatMap(chapter => {
+    const { visited } = progressFor(chapter.scene.id)
+    return chapter.hotspots.filter(spot => spot.card).map(spot => ({
+      ...spot.card,
+      chapter: chapter.scene.title,
+      unlocked: visited.includes(spot.id),
+    }))
+  })
 }

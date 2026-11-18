@@ -5,6 +5,7 @@
 - `scene`：场景标题、提示语和底部文字。
 - `characters`：人物姓名、身份、对话编号和位置。
 - `hotspots`：可调查物品的名称、对话编号和点击区域。
+- 热点可加 `card`，填写 `title` 和 `text`。角色抵达并打开调查后会在随身手册中解锁该卡。已调查的旧存档也会正确显示知识卡。
 - `dialogues`：对话正文；每一项包含说话者 `speaker` 和文字 `text`。
 
 第一章由 `game-content.json` 单独配置。第 2～25 章的标题和线索在 `chapter-index.json`，沿用通用档案室与核对流程。章节和调查点的 `id` 请保持稳定，存档靠它们识别进度。对白中的 `choices` 用 `label` 显示选项，并用 `next` 指向另一段对白；`event: "review"` 表示读完该句后完成核对。

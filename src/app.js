@@ -7,7 +7,8 @@ import { createLearningRecords } from './learning.js'
 import { createSave } from './save.js'
 import { applyTheme } from './theme.js'
 import { settingsScreen, setupSettings } from './screens/settings.js'
-import { createChapters, chapterReady } from './chapters.js'
+import { createChapters, chapterReady, knowledgeCards } from './chapters.js'
+import { setupRoomMovement } from './room-movement.js'
 import { chapterListScreen } from './screens/chapters.js'
 import gameContent from './data/game-content.json'
 import chapterIndex from './data/chapter-index.json'
@@ -48,7 +49,7 @@ export function renderApp(root) {
     })
 
     if (screen === 'trial') setupTrial(root, trialQuestions, records)
-    if (screen === 'handbook') setupHandbook(root, records)
+    if (screen === 'handbook') setupHandbook(root, records, knowledgeCards(chapters, save.getChapterProgress))
     if (screen === 'settings') setupSettings(root, save, applyTheme)
   }
 
@@ -57,6 +58,9 @@ export function renderApp(root) {
     const advance = root.querySelector('[data-chapter-advance]')
     const count = root.querySelector('[data-visited-count]')
     const saveStatus = root.querySelector('[data-room-save-status]')
+    const cardCount = root.querySelector('[data-card-count]')
+    const reward = root.querySelector('[data-dialogue-reward]')
+    const moveTo = setupRoomMovement(root.querySelector('.archive-room'))
     const nextId = chapters[chapters.indexOf(chapter) + 1]?.scene.id
     function update() {
       const progress = save.getChapterProgress(id)
@@ -67,18 +71,29 @@ export function renderApp(root) {
         : !progress.reviewed ? '与周会计核对线索后可完成本章' : '核对完成，请调查剩余地点'
       if (!completed && chapterReady(chapter, progress)) status.textContent = '调查完成，可以完成本章'
       count.textContent = progress.visited.length
+      const cards = chapter.hotspots.filter(spot => spot.card)
+      cardCount.textContent = cards.length
+        ? ` · 知识卡 ${cards.filter(spot => progress.visited.includes(spot.id)).length} / ${cards.length}` : ''
       saveStatus.hidden = !save.storageError
     }
     setupDialogue(root, chapter.dialogues, {
+      approach: moveTo,
       onOpen(source) {
+        reward.hidden = true
         if (!source.dataset.hotspotId) return
+        const spot = chapter.hotspots.find(spot => spot.id === source.dataset.hotspotId)
+        if (spot.card && !save.getChapterProgress(id).visited.includes(spot.id)) {
+          reward.textContent = `获得知识卡「${spot.card.title}」`
+          reward.hidden = false
+        }
         save.visit(id, source.dataset.hotspotId)
         source.dataset.visited = 'true'
         source.querySelector('.scene-hotspot__marker').textContent = '✓'
         update()
       },
       onEvent(event) {
-        if (event === 'review') save.review(id)
+        const visited = save.getChapterProgress(id).visited
+        if (event === 'review' && chapter.hotspots.every(spot => visited.includes(spot.id))) save.review(id)
         update()
       },
     })

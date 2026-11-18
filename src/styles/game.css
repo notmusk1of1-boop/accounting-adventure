@@ -142,7 +142,7 @@
   background: var(--plant); border: 3px solid #7e8b79;
 }
 
-.room-screen { display: grid; grid-template-rows: auto 1fr auto; }
+.room-screen { display: grid; grid-template-rows: auto 1fr auto auto; }
 .room-header {
   position: relative; z-index: 2; display: grid; grid-template-columns: auto 1fr auto; align-items: center;
   gap: 12px; min-height: 76px; padding: 10px 12px; border-bottom: 1px solid var(--line); background: var(--paper);
@@ -285,9 +285,7 @@
   50% { box-shadow: 0 0 0 9px rgba(78, 126, 108, .28); }
 }
 .scene-status {
-  position: absolute; left: 50%; bottom: 7%; display: flex; align-items: center; gap: 12px;
-  width: min(calc(100% - 24px), 470px); padding: 12px 14px; transform: translateX(-50%);
-  border: 2px solid var(--green-dark); background: var(--paper); box-shadow: 5px 5px 0 rgba(62,75,61,.16);
+  padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper);
 }
 .scene-status strong { display: block; font-family: "SimSun", serif; font-size: .9rem; }
 .scene-status p { margin: 5px 0 0; color: var(--muted); font-size: .72rem; }
@@ -336,7 +334,6 @@
   .room-screen .room-header { grid-template-columns: auto 1fr; }
   .room-actions { grid-column: 1 / -1; justify-content: flex-end; margin-top: -8px; }
   .archive-room { min-height: 650px; }
-  .scene-status { bottom: 6%; }
   .dialogue-panel { bottom: 4%; padding: 18px 58px 16px 16px; }
 }
 
@@ -403,3 +400,17 @@
 .dialogue-panel__choices:empty { display: none; }
 .dialogue-panel__choices button { text-align: start; overflow-wrap: anywhere; }
 .dialogue-panel { max-height: calc(100% - 30px); overflow: auto; overflow-wrap: anywhere; }
+.archive-room:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+.room-player {
+  position: absolute;
+  left: 23%;
+  top: 94%;
+  z-index: 2;
+  width: 48px;
+  height: 90px;
+  transform: translate(-50%, -100%);
+  pointer-events: none;
+}
+.room-player[data-walking] .pixel-character { animation: walking-step 180ms alternate infinite; }
+@keyframes walking-step { to { transform: translateY(-4px); } }
+.dialogue-card-reward { color: var(--accent); font-weight: 700; font-size: .8rem; }

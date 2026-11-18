@@ -9,13 +9,14 @@ function showLine(panel, line, index, total) {
   nextButton.setAttribute('aria-label', `${nextButton.textContent}，第 ${index + 1} 句，共 ${total} 句`)
 }
 
-export function setupDialogue(root, dialogues, { onOpen, onEvent } = {}) {
+export function setupDialogue(root, dialogues, { approach, onOpen, onEvent } = {}) {
   const panel = root.querySelector('[data-dialogue-panel]')
   if (!panel) return
 
   let activeLines = []
   let activeIndex = 0
   let trigger = null
+  let opening = 0
   const next = panel.querySelector('[data-dialogue-next]')
   const choices = panel.querySelector('[data-dialogue-choices]')
 
@@ -42,9 +43,13 @@ export function setupDialogue(root, dialogues, { onOpen, onEvent } = {}) {
     trigger = null
   }
 
-  function openDialogue(dialogueId, source) {
+  async function openDialogue(dialogueId, source) {
     const lines = dialogues[dialogueId]
     if (!Array.isArray(lines) || lines.length === 0) return
+    if (!panel.hidden) return
+    const request = ++opening
+    if (approach && !await approach(source)) return
+    if (request !== opening || !panel.isConnected) return
 
     activeLines = lines
     activeIndex = 0
@@ -74,6 +79,8 @@ export function setupDialogue(root, dialogues, { onOpen, onEvent } = {}) {
   panel.querySelector('[data-dialogue-close]').addEventListener('click', closeDialogue)
 
   panel.closest('main').addEventListener('keydown', (event) => {
-    if (event.key === 'Escape' && !panel.hidden) closeDialogue()
+    if (event.key !== 'Escape') return
+    opening += 1
+    if (!panel.hidden) closeDialogue()
   })
 }

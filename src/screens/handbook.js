@@ -1,6 +1,7 @@
 import { action, element, noteEditor, storageStatus } from './controls.js'
 
 const sections = {
+  cards: '知识卡',
   wrong: '错题本',
   favorites: '题目收藏',
   notes: '试炼笔记',
@@ -23,20 +24,29 @@ export function handbookScreen() {
   `
 }
 
-export function setupHandbook(root, records) {
+export function setupHandbook(root, records, cards) {
   const tabs = root.querySelector('[data-record-tabs]')
   const list = root.querySelector('[data-record-list]')
   const status = root.querySelector('[data-record-status]')
-  let active = 'wrong'
+  let active = 'cards'
 
   function render(message = '', focus = false) {
     const heading = element('h2', sections[active], { tabindex: '-1' })
     status.textContent = storageStatus(records) || message
     list.replaceChildren(heading)
-    const entries = Object.values(records.state[active])
+    const entries = active === 'cards' ? cards : Object.values(records.state[active])
     if (entries.length === 0) list.append(element('p', '还没有这类记录。'))
     for (const entry of entries) {
       const item = element('article', '', { class: 'trial-feedback record-item' })
+      if (active === 'cards') {
+        item.append(
+          element('h3', entry.unlocked ? entry.title : '未收集的知识卡'),
+          element('p', entry.chapter),
+          element('p', entry.unlocked ? entry.text : '走到对应的调查点后解锁。'),
+        )
+        list.append(item)
+        continue
+      }
       item.append(element('h3', entry.prompt), element('p', entry.chapter))
       if (active === 'history') {
         const time = new Date(entry.time).toLocaleString('zh-CN')
