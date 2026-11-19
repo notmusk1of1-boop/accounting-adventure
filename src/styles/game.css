@@ -168,7 +168,9 @@
   --prop-left: 51%; --prop-top: 46%; --prop-width: 17%; --prop-height: 26%;
 }
 :is(.desk--room, [data-anchor="desk"]) {
-  --prop-left: 66%; --prop-top: 57%; --prop-width: 29%; --prop-height: 25%;
+  --prop-left: 64%; --prop-top: 54%; --prop-width: 33%; --prop-height: 28%;
+  --desk-shoulder: 6%;
+  --desk-cap: 15%;
 }
 :is(.shelf, .notice-board, .desk--room) {
   left: var(--prop-left); top: var(--prop-top); width: var(--prop-width); height: var(--prop-height);
@@ -186,13 +188,17 @@
   text-align: center; color: var(--muted); border: 4px solid #a99a83; background: var(--paper); font-size: .72rem;
 }
 .desk--room {
-  position: absolute; border: 5px solid var(--wood-edge); background: var(--wood);
+  position: absolute;
+}
+.desk--room::before {
+  content: ''; position: absolute; inset: var(--desk-cap) var(--desk-shoulder) 0;
+  border: 5px solid var(--wood-edge); background: var(--wood);
 }
 .desk--room::after {
-  content: ''; position: absolute; top: -16%; left: -8%; width: 116%; height: 18%; background: var(--wood-edge);
+  content: ''; position: absolute; inset: 0 0 auto; height: var(--desk-cap); background: var(--wood-edge);
 }
 .desk--room span {
-  position: absolute; top: 22%; left: 12%; right: 12%; padding: 7px; text-align: center; color: var(--muted);
+  position: absolute; top: 32%; left: 17%; right: 17%; padding: 7px; text-align: center; color: var(--muted);
   background: var(--paper); font-size: .68rem;
 }
 .plant--room { right: 1.5%; bottom: 18%; width: 6%; height: 22%; }
@@ -276,8 +282,30 @@
   min-height: 0;
 }
 .scene-hotspot[data-anchor="middle-shelf"] { --inset-bottom: 27%; }
-.scene-hotspot[data-anchor="notice-board"] { --inset-left: 1px; --inset-right: 2%; }
-.scene-hotspot[data-anchor="desk"] { --inset-right: 3%; }
+.scene-hotspot:is([data-anchor="notice-board"], [data-anchor="desk"]) {
+  --inset-left: 0px; --inset-right: 0px; --inset-top: 0px; --inset-bottom: 0px;
+}
+.scene-hotspot[data-anchor="desk"] {
+  --desk-ring: transparent;
+  border: 0;
+  clip-path: polygon(
+    0 0, 100% 0, 100% var(--desk-cap),
+    calc(100% - var(--desk-shoulder)) var(--desk-cap),
+    calc(100% - var(--desk-shoulder)) 100%, var(--desk-shoulder) 100%,
+    var(--desk-shoulder) var(--desk-cap), 0 var(--desk-cap)
+  );
+}
+.scene-hotspot[data-anchor="desk"]:hover { --desk-ring: var(--line); }
+.scene-hotspot[data-anchor="desk"]:focus-visible { --desk-ring: var(--focus); outline: none; }
+.scene-hotspot[data-anchor="desk"]::before,
+.scene-hotspot[data-anchor="desk"]::after {
+  content: '';
+  position: absolute;
+  box-shadow: inset 0 0 0 2px var(--desk-ring);
+  pointer-events: none;
+}
+.scene-hotspot[data-anchor="desk"]::before { inset: 0 0 auto; height: var(--desk-cap); }
+.scene-hotspot[data-anchor="desk"]::after { inset: var(--desk-cap) var(--desk-shoulder) 0; }
 .scene-hotspot__marker {
   position: absolute;
   top: 50%;
