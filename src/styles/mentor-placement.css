@@ -1,0 +1,15 @@
+.archive-room {
+  container-type: size;
+}
+
+/* Keep the mentor and nameplate inside the floor band below the tall shelf. */
+.scene-character[data-character-id="mentor"] {
+  transform-origin: bottom left;
+  scale: min(1, calc((21cqh - 8px) / 116px));
+}
+
+@media (max-height: 640px) {
+  .scene-character[data-character-id="mentor"] {
+    scale: min(1, calc((21cqh - 8px) / 90px));
+  }
+}

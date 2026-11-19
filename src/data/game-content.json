@@ -15,7 +15,7 @@
       "name": "周会计",
       "role": "档案室管理员",
       "dialogueId": "mentor-intro",
-      "position": { "left": "30%", "bottom": "23%" }
+      "position": { "left": "30%", "bottom": "1%" }
     }
   ],
   "hotspots": [

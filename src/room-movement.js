@@ -58,6 +58,9 @@ export function setupRoomMovement(room) {
   return source => {
     const bounds = room.getBoundingClientRect()
     const target = source.getBoundingClientRect()
-    return move(target.left + target.width / 2 - bounds.left, bounds.height * .85)
+    const x = source.dataset.characterId === 'mentor'
+      ? target.right + player.offsetWidth / 2 + 8
+      : target.left + target.width / 2
+    return move(x - bounds.left, bounds.height * .85)
   }
 }

@@ -12,6 +12,7 @@ function characterMarkup(character) {
       class="scene-character"
       type="button"
       style="${positionStyle(character.position)}"
+      data-character-id="${character.id}"
       data-dialogue-id="${character.dialogueId}"
       aria-label="和${character.name}对话，${character.role}"
     >
