@@ -9,12 +9,23 @@ export function chapterListScreen(root, chapters, save, navigate) {
       </header>
       <div class="trial-card">
         <p data-chapters-summary></p>
+        <section class="trial-feedback" data-campaign-ending hidden>
+          <h2>档案移交完成</h2>
+          <p>你和周会计核对了全部档案。已确认的材料封卷，待核事项随清单交给下一班。会计档案室的这一轮值班结束了。</p>
+          <div class="record-actions">
+            <button class="header-button" type="button" data-navigate="handbook">回看知识卡</button>
+            <button class="header-button" type="button" data-navigate="trial">继续试炼</button>
+          </div>
+        </section>
         <ol class="chapter-list"></ol>
       </div>
     </main>
   `
   root.querySelector('[data-chapters-summary]').textContent =
     `已完成 ${save.state.progress.completed.length} / ${chapters.length} 章`
+  root.querySelector('[data-campaign-ending]').hidden = !chapters.every(
+    ({ scene }) => save.state.progress.completed.includes(scene.id),
+  )
   const list = root.querySelector('.chapter-list')
   for (const [index, chapter] of chapters.entries()) {
     const { id, title } = chapter.scene

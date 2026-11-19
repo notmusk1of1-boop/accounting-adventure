@@ -1,35 +1,27 @@
+import { storyScene } from './story-content.js'
+
 export function createChapters(first, index) {
-  const chapters = [first, ...index.map((entry, index) => ({
-    scene: {
-      title: entry.title,
-      subtitle: '会计档案室',
-      statusTitle: '调查本章资料',
-      statusText: '调查文件后，和周会计核对线索。',
-      footerLeft: '会计档案室',
-      footerRight: `第 ${index + 2} 章`,
-      ...entry.scene,
-      id: entry.id,
-    },
-    characters: entry.characters ?? first.characters,
-    hotspots: entry.hotspots ?? [{
-      id: first.hotspots[0].id, anchor: first.hotspots[0].anchor, position: first.hotspots[0].position,
-      label: '待核对的资料', dialogueId: 'clue',
-    }],
-    dialogues: {
-      clue: [{ speaker: '旁白', text: entry.clue }],
-      'mentor-intro': [{
-        speaker: '周会计',
-        text: '关于刚看到的情况，你想先核对哪一项？',
-        choices: [
-          { label: '回看原始资料', next: 'check-source' },
-          { label: '了解经手过程', next: 'check-process' },
-        ],
-      }],
-      'check-source': [{ speaker: '周会计', text: '记录你实际看到的信息，再回到原始单据核对。', event: 'review' }],
-      'check-process': [{ speaker: '周会计', text: '先把日期和经手人记清楚，才能顺着记录追查。', event: 'review' }],
-      ...entry.dialogues,
-    },
-  }))]
+  const chapters = [first, ...index.map((entry, index) => {
+    const story = storyScene(entry)
+    return {
+      scene: {
+        title: entry.title,
+        subtitle: '会计档案室',
+        statusTitle: '调查本章资料',
+        statusText: entry.clue,
+        footerLeft: '会计档案室',
+        footerRight: `第 ${index + 2} 章`,
+        ...entry.scene,
+        id: entry.id,
+      },
+      characters: entry.characters ?? first.characters,
+      hotspots: entry.hotspots ?? story.hotspots,
+      dialogues: {
+        ...story.dialogues,
+        ...entry.dialogues,
+      },
+    }
+  })]
 
   const ids = new Set()
   for (const chapter of chapters) {

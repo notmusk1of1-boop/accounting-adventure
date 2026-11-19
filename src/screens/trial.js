@@ -1,5 +1,7 @@
 import { isCorrect, selectQuestions } from '../trial.js'
 import { action, element, noteEditor, storageStatus } from './controls.js'
+import { campaignTrials } from '../story-content.js'
+import chapterIndex from '../data/chapter-index.json' with { type: 'json' }
 
 export function trialScreen() {
   return `
@@ -14,7 +16,8 @@ export function trialScreen() {
   `
 }
 
-export function setupTrial(root, bank, records) {
+export function setupTrial(root, initialBank, records) {
+  const bank = campaignTrials(initialBank, 'archive-room-01', chapterIndex)
   const card = root.querySelector('[data-trial-content]')
   let questions = []
   let index = 0
@@ -24,14 +27,14 @@ export function setupTrial(root, bank, records) {
   function showModes(focus = false) {
     const title = element('h2', '选择练习方式', { tabindex: '-1' })
     const choices = element('div', '', { class: 'trial-actions' })
+    const mixed = action('随机混题（10 题）', () => start('mixed'))
+    mixed.disabled = bank.questions.length === 0
+    choices.append(mixed)
     for (const chapter of bank.chapters) {
       const button = action(chapter.title, () => start(chapter.id))
       button.disabled = !bank.questions.some(question => question.chapterId === chapter.id)
       choices.append(button)
     }
-    const mixed = action('随机混题', () => start('mixed'))
-    mixed.disabled = bank.questions.length === 0
-    choices.append(mixed)
     card.replaceChildren(title, choices)
     if (mixed.disabled) card.append(element('p', '题库暂无可用题目。'))
     if (focus) title.focus()
@@ -39,6 +42,7 @@ export function setupTrial(root, bank, records) {
 
   function start(chapterId) {
     questions = selectQuestions(bank.questions, chapterId)
+    if (chapterId === 'mixed') questions = questions.slice(0, 10)
     index = 0
     score = 0
     mode = chapterId === 'mixed' ? '随机混题' : '按章练习'

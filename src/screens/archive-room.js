@@ -71,7 +71,7 @@ export function archiveRoomScreen(progress, content) {
           <div class="shelf shelf--middle">
             <span></span><span></span><span></span>
           </div>
-          <div class="notice-board">待开放<br>章节资料</div>
+          <div class="notice-board">值班室<br>复核清单</div>
           <div class="desk desk--room"><span>资料台账</span></div>
           <div class="plant plant--room"></div>
         </div>
