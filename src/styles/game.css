@@ -158,22 +158,35 @@
   position: relative; min-height: 0; overflow: hidden;
   background: var(--room-image, none) center / cover, repeating-linear-gradient(90deg, rgba(92,72,46,.12) 0 1px, transparent 1px 36px), linear-gradient(var(--wall) 0 68%, var(--floor) 68% 100%);
 }
+:is(.shelf--left, [data-anchor="left-shelf"]) {
+  --prop-left: 5%; --prop-top: 31%; --prop-width: 20%; --prop-height: 47%;
+}
+:is(.shelf--middle, [data-anchor="middle-shelf"]) {
+  --prop-left: 29%; --prop-top: 22%; --prop-width: 18%; --prop-height: 56%;
+}
+:is(.notice-board, [data-anchor="notice-board"]) {
+  --prop-left: 51%; --prop-top: 46%; --prop-width: 17%; --prop-height: 26%;
+}
+:is(.desk--room, [data-anchor="desk"]) {
+  --prop-left: 66%; --prop-top: 57%; --prop-width: 29%; --prop-height: 25%;
+}
+:is(.shelf, .notice-board, .desk--room) {
+  left: var(--prop-left); top: var(--prop-top); width: var(--prop-width); height: var(--prop-height);
+}
 .archive-room__wall { position: absolute; inset: 0; }
 .wall-sign--room { top: 6%; left: 7%; width: 29%; height: 9%; font-size: .72rem; }
 .window--room { top: 5%; right: 7%; width: 20%; height: 29%; }
 .shelf {
-  position: absolute; bottom: 22%; display: grid; gap: 5px; padding: 6px; border: 5px solid #74634e;
+  position: absolute; display: grid; gap: 5px; padding: 6px; border: 5px solid #74634e;
   background: var(--shelf); box-shadow: inset 0 0 0 2px #b8a589;
 }
 .shelf span { background: repeating-linear-gradient(90deg, var(--books) 0 16%, #6f614f 16% 19%); border: 2px solid #766751; }
-.shelf--left { left: 5%; width: 20%; height: 47%; }
-.shelf--middle { left: 29%; width: 18%; height: 56%; }
 .notice-board {
-  position: absolute; left: 51%; bottom: 28%; display: grid; place-items: center; width: 17%; height: 26%;
+  position: absolute; display: grid; place-items: center;
   text-align: center; color: var(--muted); border: 4px solid #a99a83; background: var(--paper); font-size: .72rem;
 }
 .desk--room {
-  position: absolute; right: 5%; bottom: 18%; width: 29%; height: 25%; border: 5px solid var(--wood-edge); background: var(--wood);
+  position: absolute; border: 5px solid var(--wood-edge); background: var(--wood);
 }
 .desk--room::after {
   content: ''; position: absolute; top: -16%; left: -8%; width: 116%; height: 18%; background: var(--wood-edge);
@@ -253,6 +266,18 @@
 }
 .scene-hotspot:hover,
 .scene-hotspot:focus-visible { border-color: rgba(49, 92, 80, .58); background: rgba(246, 241, 229, .12); }
+.scene-hotspot:focus-visible { outline-offset: -3px; }
+.scene-hotspot[data-anchor] {
+  left: calc(var(--prop-left) + var(--inset-left, 4px));
+  top: calc(var(--prop-top) + var(--inset-top, 4px));
+  width: calc(var(--prop-width) - var(--inset-left, 4px) - var(--inset-right, 4px));
+  height: calc(var(--prop-height) - var(--inset-top, 4px) - var(--inset-bottom, 4px));
+  min-width: 0;
+  min-height: 0;
+}
+.scene-hotspot[data-anchor="middle-shelf"] { --inset-bottom: 27%; }
+.scene-hotspot[data-anchor="notice-board"] { --inset-left: 1px; --inset-right: 2%; }
+.scene-hotspot[data-anchor="desk"] { --inset-right: 3%; }
 .scene-hotspot__marker {
   position: absolute;
   top: 50%;
@@ -278,7 +303,9 @@
   border: 1px solid rgba(49, 92, 80, .5);
   background: var(--paper);
   font-size: .62rem;
-  white-space: nowrap;
+  width: max-content;
+  max-width: calc(100% - 2px);
+  overflow-wrap: anywhere;
 }
 @keyframes hotspot-pulse {
   0%, 100% { box-shadow: 0 0 0 4px rgba(78, 126, 108, .16); }
@@ -400,7 +427,14 @@
 .dialogue-panel__choices:empty { display: none; }
 .dialogue-panel__choices button { text-align: start; overflow-wrap: anywhere; }
 .dialogue-panel { max-height: calc(100% - 30px); overflow: auto; overflow-wrap: anywhere; }
-.archive-room:focus-visible { outline: 3px solid var(--focus); outline-offset: -3px; }
+.archive-room:focus-visible { outline: none; }
+.archive-room:focus-visible::after {
+  content: '';
+  position: absolute;
+  inset: calc(82% + 3px) 3px 3px;
+  border: 2px solid var(--focus);
+  pointer-events: none;
+}
 .room-player {
   position: absolute;
   left: 23%;

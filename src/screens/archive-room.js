@@ -31,7 +31,7 @@ function hotspotMarkup(hotspot, visited) {
     <button
       class="scene-hotspot"
       type="button"
-      style="${positionStyle(hotspot.position)}"
+      ${hotspot.anchor ? `data-anchor="${hotspot.anchor}"` : `style="${positionStyle(hotspot.position)}"`}
       data-dialogue-id="${hotspot.dialogueId}"
       data-hotspot-id="${hotspot.id}"
       data-visited="${visited}"

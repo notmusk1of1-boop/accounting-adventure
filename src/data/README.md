@@ -5,6 +5,7 @@
 - `scene`：场景标题、提示语和底部文字。
 - `characters`：人物姓名、身份、对话编号和位置。
 - `hotspots`：可调查物品的名称、对话编号和点击区域。
+- `anchor` 将调查框贴合现有物件，可选 `left-shelf`、`middle-shelf`、`notice-board`、`desk`；自定义点位可以改用 `position`。
 - 热点可加 `card`，填写 `title` 和 `text`。角色抵达并打开调查后会在随身手册中解锁该卡。已调查的旧存档也会正确显示知识卡。
 - `dialogues`：对话正文；每一项包含说话者 `speaker` 和文字 `text`。
 

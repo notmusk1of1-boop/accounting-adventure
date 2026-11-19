@@ -12,7 +12,7 @@ export function createChapters(first, index) {
     },
     characters: entry.characters ?? first.characters,
     hotspots: entry.hotspots ?? [{
-      id: first.hotspots[0].id, position: first.hotspots[0].position,
+      id: first.hotspots[0].id, anchor: first.hotspots[0].anchor, position: first.hotspots[0].position,
       label: '待核对的资料', dialogueId: 'clue',
     }],
     dialogues: {
@@ -45,6 +45,11 @@ export function createChapters(first, index) {
     for (const { card, id } of hotspots) {
       if (card !== undefined && ![card?.title, card?.text].every(value => typeof value === 'string' && value.trim())) {
         throw new Error(`知识卡缺少标题或正文：${scene.id} / ${id}`)
+      }
+    }
+    for (const { anchor, position, id } of hotspots) {
+      if (anchor ? !['left-shelf', 'middle-shelf', 'notice-board', 'desk'].includes(anchor) : !position) {
+        throw new Error(`调查点缺少有效位置：${scene.id} / ${id}`)
       }
     }
     for (const lines of Object.values(dialogues)) {
