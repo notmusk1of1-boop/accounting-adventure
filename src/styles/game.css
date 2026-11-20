@@ -205,7 +205,37 @@
   position: absolute; top: 32%; left: 17%; right: 17%; padding: 7px; text-align: center; color: var(--muted);
   background: var(--paper); font-size: .68rem;
 }
-.plant--room { right: 1.5%; bottom: 18%; width: 6%; height: 22%; }
+.plant--room {
+  right: 1.5%;
+  bottom: 18%;
+  width: clamp(22px, 4.7%, 42px);
+  height: clamp(32px, 10%, 58px);
+  border: 0;
+  border-radius: 0;
+  background: none;
+  pointer-events: none;
+}
+.plant--room::before,
+.plant--room::after {
+  content: '';
+  position: absolute;
+}
+.plant--room::before {
+  inset: 0 0 26%;
+  background: linear-gradient(90deg, var(--green-dark) 0 17%, var(--green) 17% 47%, var(--plant) 47% 61%, var(--green) 61% 85%, var(--green-dark) 85%);
+  clip-path: polygon(
+    42% 0, 60% 0, 60% 12%, 67% 12%, 67% 33%, 77% 33%, 77% 18%, 100% 18%,
+    100% 42%, 90% 42%, 90% 55%, 76% 55%, 76% 66%, 57% 66%, 57% 100%, 44% 100%,
+    44% 70%, 30% 70%, 30% 60%, 15% 60%, 15% 49%, 5% 49%, 5% 39%, 0 39%, 0 25%,
+    24% 25%, 24% 36%, 36% 36%, 36% 14%, 42% 14%
+  );
+}
+.plant--room::after {
+  inset: 67% 12% 0;
+  background: linear-gradient(#c19071 0 15%, #a87557 15% 32%, #8a6048 32% 86%, #684835 86%);
+  clip-path: polygon(0 0, 100% 0, 100% 32%, 89% 32%, 89% 71%, 81% 71%, 81% 100%,
+    19% 100%, 19% 71%, 11% 71%, 11% 32%, 0 32%);
+}
 .scene-interactions { position: absolute; inset: 0; z-index: 3; pointer-events: none; }
 .scene-interactions button { pointer-events: auto; }
 .scene-character {
