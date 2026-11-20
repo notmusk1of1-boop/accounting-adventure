@@ -341,19 +341,26 @@
 .scene-hotspot[data-anchor="desk"]::after { inset: var(--desk-cap) var(--desk-shoulder) 0; }
 .scene-hotspot__marker {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  top: 3px;
+  left: 4px;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  transform: translate(-50%, -50%);
-  border: 2px solid #f8f1cf;
+  width: 15px;
+  height: 15px;
+  font: 700 11px/1 system-ui, sans-serif;
+  pointer-events: none;
+  border: 1px solid #f8f1cf;
   border-radius: 50%;
   background: var(--green);
   color: white;
-  box-shadow: 0 0 0 5px rgba(78, 126, 108, .22);
-  animation: hotspot-pulse 1.8s ease-in-out infinite;
+}
+.scene-hotspot[data-anchor="desk"] .scene-hotspot__marker { left: 10%; }
+@media (max-height: 640px), (max-width: 360px) {
+  .notice-board { padding-inline-start: 14px; }
+  .scene-hotspot[data-anchor="notice-board"] .scene-hotspot__marker {
+    top: 1px;
+    left: 1px;
+  }
 }
 .scene-hotspot__label {
   position: absolute;
@@ -367,10 +374,6 @@
   width: max-content;
   max-width: calc(100% - 2px);
   overflow-wrap: anywhere;
-}
-@keyframes hotspot-pulse {
-  0%, 100% { box-shadow: 0 0 0 4px rgba(78, 126, 108, .16); }
-  50% { box-shadow: 0 0 0 9px rgba(78, 126, 108, .28); }
 }
 .scene-status {
   padding: 10px 14px; border-top: 1px solid var(--line); background: var(--paper);
@@ -472,7 +475,6 @@
   resize: vertical;
 }
 .trial-card > .trial-form + .trial-button { margin-top: 14px; }
-.scene-hotspot[data-visited="true"] .scene-hotspot__marker { animation: none; }
 .settings-card { overflow-wrap: anywhere; }
 .settings-section {
   min-inline-size: 0;
