@@ -285,8 +285,7 @@
   min-width: 0;
   min-height: 0;
 }
-.scene-hotspot[data-anchor="middle-shelf"] { --inset-bottom: 27%; }
-.scene-hotspot:is([data-anchor="notice-board"], [data-anchor="desk"]) {
+.scene-hotspot:is([data-anchor="middle-shelf"], [data-anchor="notice-board"], [data-anchor="desk"]) {
   --inset-left: 0px; --inset-right: 0px; --inset-top: 0px; --inset-bottom: 0px;
 }
 .scene-hotspot[data-anchor="desk"] {
