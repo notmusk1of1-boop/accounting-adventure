@@ -480,8 +480,6 @@
   transform: translate(-50%, -100%);
   pointer-events: none;
 }
-.room-player[data-walking] .pixel-character { animation: walking-step 180ms alternate infinite; }
-@keyframes walking-step { to { transform: translateY(-4px); } }
 .dialogue-card-reward { color: var(--accent); font-weight: 700; font-size: .8rem; }
 
 @media (max-height: 640px) {
@@ -495,7 +493,6 @@
   .scene-character { min-height: 44px; gap: 1px; }
   .scene-character__sprite { zoom: .72; }
   .room-player { width: 38px; height: 70px; }
-  .room-player .pixel-character { zoom: .78; }
 }
 
 @media (max-height: 600px) {
@@ -507,6 +504,5 @@
   .scene-status strong, .scene-status p:first-of-type { display: none; }
   .scene-character__sprite { zoom: .5; }
   .room-player { width: 29px; height: 54px; }
-  .room-player .pixel-character { zoom: .6; }
   .dialogue-panel { padding: 8px 12px; }
 }

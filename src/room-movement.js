@@ -11,8 +11,10 @@ export function setupRoomMovement(room) {
     const top = current.bottom - bounds.top
     animation?.cancel()
     delete player.dataset.walking
-    const targetX = clamp(x, 28, bounds.width - 28)
+    const margin = Math.max(28, player.offsetWidth / 2)
+    const targetX = clamp(x, margin, bounds.width - margin)
     const targetY = clamp(y, bounds.height * .84, bounds.height - 18)
+    if (Math.abs(targetX - left) >= 2) player.dataset.facing = targetX < left ? 'left' : 'right'
     player.style.left = `${targetX / bounds.width * 100}%`
     player.style.top = `${targetY / bounds.height * 100}%`
     animation = null

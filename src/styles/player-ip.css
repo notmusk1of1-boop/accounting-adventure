@@ -1,0 +1,28 @@
+.player-ip {
+  height: 90px;
+  aspect-ratio: 2069 / 2280;
+  background: url('/zhou-yuan-pixel-trio-preview.png') 0 0 / 300% 100% no-repeat;
+}
+
+.room-player {
+  width: auto;
+  aspect-ratio: 2069 / 2280;
+}
+
+.room-player .player-ip { height: 100%; }
+.room-player[data-facing="left"] .player-ip { transform: scaleX(-1); }
+
+@media (prefers-reduced-motion: no-preference) {
+  .room-player[data-walking] .player-ip {
+    animation: player-steps 222ms step-end infinite;
+  }
+}
+
+@keyframes player-steps {
+  from { background-position: 50% 0; }
+  50%, to { background-position: 100% 0; }
+}
+
+@media (max-height: 640px) {
+  .character-pair .player-ip { height: 63px; }
+}

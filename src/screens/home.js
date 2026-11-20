@@ -1,4 +1,4 @@
-export function pixelCharacter(className, label) {
+function pixelCharacter(className, label) {
   return `
     <div class="pixel-character ${className}" role="img" aria-label="${label}">
       <span class="pixel-character__hair"></span>
@@ -8,6 +8,10 @@ export function pixelCharacter(className, label) {
       <span class="pixel-character__legs"></span>
     </div>
   `
+}
+
+export function playerCharacter() {
+  return '<div class="player-ip" role="img" aria-label="出纳周予安"></div>'
 }
 
 export function homeScreen(progress) {
@@ -29,7 +33,7 @@ export function homeScreen(progress) {
         <p class="chapter-label">中级会计 · 实务篇</p>
 
         <div class="character-pair" aria-label="出纳与老会计">
-          ${pixelCharacter('pixel-character--student', '年轻出纳')}
+          ${playerCharacter()}
           ${pixelCharacter('pixel-character--mentor', '老会计')}
         </div>
 

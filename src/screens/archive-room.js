@@ -1,4 +1,4 @@
-import { pixelCharacter } from './home.js'
+import { playerCharacter } from './home.js'
 
 function positionStyle(position) {
   return Object.entries(position)
@@ -82,7 +82,7 @@ export function archiveRoomScreen(progress, content) {
           ${hotspots.map(hotspot => hotspotMarkup(hotspot, progress.visited.includes(hotspot.id))).join('')}
         </div>
         <div class="room-player" data-room-player>
-          ${pixelCharacter('pixel-character--student', '玩家')}
+          ${playerCharacter()}
         </div>
 
         <section class="dialogue-panel" data-dialogue-panel role="dialog" aria-label="场景对话" hidden>
