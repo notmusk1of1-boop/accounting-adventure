@@ -1,4 +1,4 @@
-import { playerCharacter } from './home.js'
+import { characterSwitch, playerCharacter } from '../player-characters.js'
 
 function positionStyle(position) {
   return Object.entries(position)
@@ -56,6 +56,7 @@ export function archiveRoomScreen(progress, content) {
           <p>${scene.subtitle}</p>
         </div>
         <div class="room-actions" aria-label="档案室功能">
+          ${characterSwitch()}
           <button class="header-button" type="button" data-navigate="trial">试炼</button>
           <button class="header-button" type="button" data-navigate="handbook">手册</button>
           <button class="header-button" type="button" data-navigate="settings">设置</button>

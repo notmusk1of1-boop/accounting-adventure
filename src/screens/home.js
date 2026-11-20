@@ -1,3 +1,5 @@
+import { characterSwitch, playerCharacter } from '../player-characters.js'
+
 function pixelCharacter(className, label) {
   return `
     <div class="pixel-character ${className}" role="img" aria-label="${label}">
@@ -8,10 +10,6 @@ function pixelCharacter(className, label) {
       <span class="pixel-character__legs"></span>
     </div>
   `
-}
-
-export function playerCharacter() {
-  return '<div class="player-ip" role="img" aria-label="出纳周予安"></div>'
 }
 
 export function homeScreen(progress) {
@@ -41,9 +39,12 @@ export function homeScreen(progress) {
           你是一名出纳。推开档案室的门，调查资料，和老会计聊一聊。
         </p>
 
-        <button class="primary-button" type="button" data-navigate="room">
-          ${progress.started ? '继续旅程' : '开始新的旅程'}
-        </button>
+        <div class="home-card__launch">
+          <button class="primary-button" type="button" data-navigate="room">
+            ${progress.started ? '继续旅程' : '开始新的旅程'}
+          </button>
+          ${characterSwitch()}
+        </div>
         <button class="text-button" type="button" data-navigate="handbook">
           先翻翻随身手册
         </button>

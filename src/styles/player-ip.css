@@ -1,7 +1,14 @@
 .player-ip {
+  --player-cell-ratio: 2069 / 2280;
+  --player-sheet: url('/zhou-yuan-pixel-trio-preview.png');
   height: 90px;
-  aspect-ratio: 2069 / 2280;
-  background: url('/zhou-yuan-pixel-trio-preview.png') 0 0 / 300% 100% no-repeat;
+  aspect-ratio: var(--player-cell-ratio);
+  background: var(--player-sheet) 0 0 / 300% 100% no-repeat;
+}
+
+.player-ip[data-player-character="lin-lan"] {
+  --player-cell-ratio: 687 / 763;
+  --player-sheet: url('/lin-lan-pixel-trio.png');
 }
 
 .room-player {
@@ -9,8 +16,25 @@
   aspect-ratio: 2069 / 2280;
 }
 
-.room-player .player-ip { height: 100%; }
-.room-player[data-facing="left"] .player-ip { transform: scaleX(-1); }
+.room-player .player-ip {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  height: 100%;
+  transform: translateX(-50%);
+  transition-property: none;
+}
+.room-player[data-facing="left"] .player-ip { transform: translateX(-50%) scaleX(-1); }
+
+.home-card__launch { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 8px; }
+.character-switch { white-space: nowrap; border-color: var(--accent); color: var(--accent); font-weight: 700; }
+.character-switch:hover { background: var(--paper-deep); }
+
+@media (max-width: 520px) {
+  .room-screen .room-header { grid-template-columns: auto minmax(0, 1fr); }
+  .room-screen .room-actions { grid-column: 1 / -1; justify-content: flex-end; margin-top: -8px; }
+  .home-card__launch .primary-button { padding-inline: 8px; }
+}
 
 @media (prefers-reduced-motion: no-preference) {
   .room-player[data-walking] .player-ip {
